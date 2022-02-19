@@ -101,6 +101,8 @@ var lastPlayerIdBallKick = null;
 var secondLastPlayerIdBallKick = null;
 
 function initPersonalScoreboard(player) {
+  if (personalScoreboard[player.id] != undefined) return;
+
   personalScoreboard[player.id] = {
     assists: 0,
     goals: 0,
@@ -119,7 +121,17 @@ function showScoreboard() {
     return 0;
   });
 
-  var scoreboard = "PJ: Partidos jugados - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\nPJ\tPG\tPP\tG\tA\tAG\tJugador\n";
+  showScoreboardForPlayers(players, true)
+}
+
+// Shows the scoreboard for a list of players
+function showScoreboardForPlayers(players, showInfo = true) {
+
+  var scoreboard = "";
+  if (showInfo) {
+    scoreboard += "PJ: Partidos jugados - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\n"
+  }
+  scoreboard += "PJ\tPG\tPP\tG\tA\tAG\tJugador\n";
   players.forEach(function(player) {
     scoreboard += personalScoreboard[player.id].gamesPlayed + "\t" + personalScoreboard[player.id].gamesWon + "\t" + personalScoreboard[player.id].gamesLost + "\t" + personalScoreboard[player.id].goals + "\t" + personalScoreboard[player.id].assists + "\t" + personalScoreboard[player.id].ownGoals + "\t" + player.name + "\n";
   });
@@ -139,8 +151,8 @@ room.onTeamGoal = function(team) {
   if (player.team == team) {
     personalScoreboard[player.id].goals++;
 
-    if (secondPlayer.team == team) {
-      personalScoreboard[player.id].assists++;
+    if (secondPlayer && secondPlayer.team == team) {
+      personalScoreboard[secondPlayer.id].assists++;
     }
   } else {
     personalScoreboard[player.id].ownGoals++;
@@ -184,6 +196,7 @@ room.onTeamVictory = function(scores) {
 room.onPlayerJoin = function(player) {
   room.setPlayerAdmin(player.id, true);
   initPersonalScoreboard(player);
+  showScoreboardForPlayers([player], false);
 }
 
 room.onPlayerLeave = function(player) {
