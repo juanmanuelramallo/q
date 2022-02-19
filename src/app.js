@@ -27,6 +27,11 @@ room.setDefaultStadium("Big");
 room.setScoreLimit(1);
 room.setTimeLimit(0);
 
+const STOPPED = 0;
+const STARTED = 1;
+const PAUSED = 2;
+var gameStatus = STOPPED;
+
 /******************************************************************************
  *
  * Commands
@@ -56,6 +61,9 @@ var commands = {
   },
   "!scoreboard": function(player) {
     showScoreboard();
+  },
+  "!restore": function(player) {
+    restorePosition(player);
   },
 }
 
@@ -189,9 +197,53 @@ room.onTeamVictory = function(scores) {
 
 /******************************************************************************
  *
+ *  Restore player position on disconnect
+ *
+ * ****************************************************************************/
+
+var playerPositions = {};
+
+function storePlayerPositions() {
+  if (room.getScores() == null) return;
+
+  var players = room.getPlayerList();
+  players.forEach(function(player) {
+    if (player.team == 0) return;
+
+    playerPositions[player.name] = {
+      x: player.position.x,
+      y: player.position.y,
+      team: player.team
+    };
+  });
+}
+
+function restorePosition(player) {
+  if (gameStatus == STOPPED) return;
+  if (playerPositions[player.name] == undefined) return;
+
+  if (gameStatus != PAUSED) {
+    room.pauseGame(true);
+  }
+
+  room.setPlayerTeam(player.id, playerPositions[player.name].team);
+  room.setPlayerDiscProperties(player.id, {
+    x: playerPositions[player.name].x,
+    y: playerPositions[player.name].y,
+  });
+
+  room.sendAnnouncement(String.fromCodePoint(128580) + " Devolviendo la posicion a " + player.name);
+}
+
+/******************************************************************************
+ *
  *  Game
  *
  * ****************************************************************************/
+
+room.onGameTick = function() {
+  storePlayerPositions();
+}
 
 room.onPlayerJoin = function(player) {
   room.setPlayerAdmin(player.id, true);
@@ -204,11 +256,18 @@ room.onPlayerLeave = function(player) {
 }
 
 room.onGameStart = function(byPlayer) {
+  gameStatus = STARTED;
   lastPlayerIdBallKick = null;
   secondLastPlayerIdBallKick = null;
+  playerPositions = {};
   room.startRecording();
 }
 
 room.onGameStop = function(byPlayer) {
+  gameStatus = STOPPED;
   handleStopRecording(room.stopRecording());
+}
+
+room.onGamePause = function(byPlayer) {
+  gameStatus = PAUSED;
 }
