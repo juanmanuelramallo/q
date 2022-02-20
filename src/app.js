@@ -13,7 +13,7 @@
  *  [x] 6) Global scoreboard
  *  [ ] 7) Pause on AFKs
  *  [ ] 8) Export scoreboard to a csv
- *  [ ] 9) Pause on disconnect
+ *  [x] 9) Pause on disconnect
  *  [ ] 10) New game mode? Portalhax, ball passes through portals
  */
 
@@ -31,6 +31,15 @@ const STOPPED = 0;
 const STARTED = 1;
 const PAUSED = 2;
 var gameStatus = STOPPED;
+
+var emojis = {
+  "redExclamationMark": 10071,
+  "faceWithSymbolsOverMouth": 129324,
+  "faceWithRollingEyes": 128580
+}
+function e(emoji) {
+  return String.fromCodePoint(emojis[emoji]);
+}
 
 /******************************************************************************
  *
@@ -51,12 +60,12 @@ function swapPlayers() {
 
 var commands = {
   "!rr": function(player) {
-    room.sendAnnouncement("Reset pedido por " + player.name, null);
+    room.sendAnnouncement(e("redExclamationMark") + "Reset pedido por " + player.name, null);
     room.stopGame();
     room.startGame();
   },
   "!swap": function(player) {
-    room.sendAnnouncement("Swap pedido por " + player.name, null);
+    room.sendAnnouncement(e("redExclamationMark") + "Swap pedido por " + player.name, null);
     swapPlayers();
   },
   "!scoreboard": function(player) {
@@ -213,7 +222,8 @@ function storePlayerPositions() {
     playerPositions[player.name] = {
       x: player.position.x,
       y: player.position.y,
-      team: player.team
+      team: player.team,
+      restoreEnabled: false
     };
   });
 }
@@ -221,6 +231,7 @@ function storePlayerPositions() {
 function restorePosition(player) {
   if (gameStatus == STOPPED) return;
   if (playerPositions[player.name] == undefined) return;
+  if (!playerPositions[player.name].restoreEnabled) return;
 
   if (gameStatus != PAUSED) {
     room.pauseGame(true);
@@ -232,7 +243,8 @@ function restorePosition(player) {
     y: playerPositions[player.name].y,
   });
 
-  room.sendAnnouncement(String.fromCodePoint(128580) + " Devolviendo la posicion a " + player.name);
+  playerPositions[player.name].restoreEnabled = false;
+  room.sendAnnouncement(e("faceWithRollingEyes") + " Devolviendo la posicion a " + player.name);
 }
 
 /******************************************************************************
@@ -240,6 +252,22 @@ function restorePosition(player) {
  *  Game
  *
  * ****************************************************************************/
+
+function randomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function handlePlayerLeave(player) {
+  if (randomInt(3) == 0) {
+    room.sendAnnouncement(e("faceWithSymbolsOverMouth") + "Rage quit " + player.name + "?", null);
+  }
+
+  if (player.team == 0) return;
+
+  room.pauseGame(true);
+  playerPositions[player.name].restoreEnabled = true;
+  room.sendAnnouncement(e("redExclamationMark") + "Pausa. Se fue " + player.name + ".", null);
+}
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -252,7 +280,7 @@ room.onPlayerJoin = function(player) {
 }
 
 room.onPlayerLeave = function(player) {
-  room.sendAnnouncement("Rage quit " + player.name + "?", null);
+  handlePlayerLeave(player);
 }
 
 room.onGameStart = function(byPlayer) {
