@@ -21,33 +21,52 @@ function swapPlayers() {
 }
 
 var commands = {
-  "!help": function(player) {
-    room.sendAnnouncement(e("informationDeskWoman") + "\n!swap: Pa cambiar equipos\n!scoreboard: Give me the stats daddy\n!rr: Quien fue el pajero que tiro el teclado?\n!restore: Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas\n!ds: Descarga el scoreboard en csv");
+  "!help": {
+    description: "Aiudaaaa",
+    func: function(player) { showHelp() }
   },
-  "!rr": function(player) {
-    room.sendAnnouncement(e("redExclamationMark") + "Reset pedido por " + player.name, null);
-    room.stopGame();
-    room.startGame();
+  "!rr": {
+    description: "Quien fue el pajero que tiro el teclado?",
+    func: function(player) {
+      room.sendAnnouncement(e("redExclamationMark") + "Reset pedido por " + player.name, null);
+      room.stopGame();
+      room.startGame();
+    },
   },
-  "!swap": function(player) {
-    room.sendAnnouncement(e("redExclamationMark") + "Swap pedido por " + player.name, null);
-    swapPlayers();
+  "!swap": {
+    description: "Pa cambiar equipos",
+    func: function(player) {
+      room.sendAnnouncement(e("redExclamationMark") + "Swap pedido por " + player.name, null);
+      swapPlayers();
+    }
   },
-  "!scoreboard": function(player) {
-    showScoreboard();
+  "!sc": {
+    description: "Give me the stats daddy",
+    func: function(player) { showScoreboard() }
   },
-  "!ds": function(player) {
-    downloadScoreboard();
+  "!ds": {
+    description: "Descarga el scoreboard en csv",
+    func: function(player) { downloadScoreboard() }
   },
-  "!restore": function(player) {
-    restorePosition(player);
+  "!restore": {
+    description: "Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas",
+    func: function(player) { restorePosition(player) }
   },
+}
+
+function showHelp() {
+  var msg = e("informationDeskWoman") + "\n";
+  Object.keys(commands).forEach(function(command) {
+    var meta = commands[command];
+    msg += e("smallBlueDiamond") + " " + command + ": " + meta.description + "\n";
+  });
+  room.sendAnnouncement(msg);
 }
 
 function handleCommandsFromChat(player, message) {
   if (message[0] != "!") return;
 
-  commands[message].call(this, player);
+  commands[message].func.call(this, player);
 }
 
 export { handleCommandsFromChat };
