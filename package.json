@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "source": "src/app.js",
+  "main": "dist/app.js",
+  "module": "dist/module.js",
   "scripts": {
     "test": "echo \"kjjj\" && exit 1",
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build",
+    "watch": "parcel watch"
   },
   "author": "esviernes.com",
   "license": "ISC",
