@@ -25,14 +25,12 @@ import {
   handleScoreboardTeamGoal,
   handleScoreboardTeamVictory,
   initPersonalScoreboard,
-  showScoreboard,
   showScoreboardForPlayers,
 } from "./scoreboard";
 import { e } from "./emojis";
 import {
   clearPlayerPositions,
   handleRestorePositionPlayerLeave,
-  restorePosition,
   storePlayerPositions
 } from "./restorePosition";
 import { handleCommandsFromChat } from "./commands";

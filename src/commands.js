@@ -5,7 +5,7 @@
  *****************************************************************************/
 
 import { room } from './room';
-import { showScoreboard } from './scoreboard';
+import { showScoreboard, downloadScoreboard } from './scoreboard';
 import { restorePosition } from './restorePosition';
 import { e } from './emojis';
 
@@ -22,7 +22,7 @@ function swapPlayers() {
 
 var commands = {
   "!help": function(player) {
-    room.sendAnnouncement(e("informationDeskWoman") + "\n!swap: Pa cambiar equipos\n!scoreboard: Give me the stats daddy\n!rr: Quien fue el pajero que tiro el teclado?\n!restore: Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas");
+    room.sendAnnouncement(e("informationDeskWoman") + "\n!swap: Pa cambiar equipos\n!scoreboard: Give me the stats daddy\n!rr: Quien fue el pajero que tiro el teclado?\n!restore: Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas\n!downloadScoreboard: Descarga el scoreboard en csv");
   },
   "!rr": function(player) {
     room.sendAnnouncement(e("redExclamationMark") + "Reset pedido por " + player.name, null);
@@ -35,6 +35,9 @@ var commands = {
   },
   "!scoreboard": function(player) {
     showScoreboard();
+  },
+  "!downloadScoreboard": function(player) {
+    downloadScoreboard();
   },
   "!restore": function(player) {
     restorePosition(player);

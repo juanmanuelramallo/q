@@ -1,4 +1,5 @@
 import { room } from "./room";
+import { downloadFile } from "./downloadFile";
 
 var personalScoreboard = {};
 var lastPlayerIdBallKick = null;
@@ -14,11 +15,11 @@ function initPersonalScoreboard(player) {
 
   personalScoreboard[player.name] = {
     assists: 0,
-    goals: 0,
-    ownGoals: 0,
+    gamesLost: 0,
     gamesPlayed: 0,
     gamesWon: 0,
-    gamesLost: 0
+    goals: 0,
+    ownGoals: 0
   };
 }
 
@@ -97,8 +98,31 @@ function handleScoreboardTeamVictory(scores) {
   showScoreboard();
 }
 
+function exportScoreboardToCSV() {
+  var csv = "playerName,gamesPlayed,gamesWon,gamesLost,goals,assists,ownGoals\n";
+  Object.keys(personalScoreboard).map(function(playerName) {
+    csv += playerName + "," +
+      personalScoreboard[playerName].gamesPlayed + "," +
+      personalScoreboard[playerName].gamesWon + "," +
+      personalScoreboard[playerName].gamesLost + "," +
+      personalScoreboard[playerName].goals + "," +
+      personalScoreboard[playerName].assists + "," +
+      personalScoreboard[playerName].ownGoals + "\n";
+  });
+
+  return csv;
+}
+
+function downloadScoreboard() {
+  var csv = exportScoreboardToCSV();
+  var today = new Date();
+  var filename = "Scoreboard " + today.toDateString() + " " + today.toLocaleTimeString() + ".csv";
+  downloadFile(filename, csv);
+}
+
 export {
   clearLastBallKicks,
+  downloadScoreboard,
   handleScoreboardBallKick,
   handleScoreboardTeamGoal,
   handleScoreboardTeamVictory,
