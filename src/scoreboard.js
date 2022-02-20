@@ -100,8 +100,10 @@ function handleScoreboardTeamVictory(scores) {
 
 function exportScoreboardToCSV() {
   var csv = "playerName,gamesPlayed,gamesWon,gamesLost,goals,assists,ownGoals\n";
+  var today = new Date();
   Object.keys(personalScoreboard).map(function(playerName) {
     csv += playerName + "," +
+      today.toISOString() + "," +
       personalScoreboard[playerName].gamesPlayed + "," +
       personalScoreboard[playerName].gamesWon + "," +
       personalScoreboard[playerName].gamesLost + "," +
@@ -116,7 +118,7 @@ function exportScoreboardToCSV() {
 function downloadScoreboard() {
   var csv = exportScoreboardToCSV();
   var today = new Date();
-  var filename = "Scoreboard " + today.toDateString() + " " + today.toLocaleTimeString() + ".csv";
+  var filename = "Scoreboard " + today.toISOString() + ".csv";
   downloadFile(filename, csv);
 }
 
