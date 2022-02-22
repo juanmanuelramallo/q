@@ -7,6 +7,7 @@
 import { room } from "./room";
 import { e } from "./emojis";
 import { setGameStatus, getGameStatus, STOPPED, PAUSED } from "./gameStatus";
+import { randomInt } from "./utils";
 
 var playerPositions = {};
 
@@ -52,10 +53,6 @@ function restorePosition(player) {
 
   playerPositions[player.name].restoreEnabled = false;
   room.sendAnnouncement(e("faceWithRollingEyes") + " Devolviendo la posicion a " + player.name);
-}
-
-function randomInt(max) {
-  return Math.floor(Math.random() * max);
 }
 
 function handleRestorePositionPlayerLeave(player) {
