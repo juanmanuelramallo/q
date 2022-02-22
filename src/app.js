@@ -38,7 +38,6 @@ import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameSt
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages } from "./sendHappyMessages"
 
-
 room.onGameTick = function() {
   storePlayerPositions();
 }
