@@ -87,6 +87,4 @@ room.onTeamVictory = function(scores) {
   handleScoreboardTeamVictory(scores);
 }
 
-room.onRoomLink = function () {
-  sendHappyMessages();
-}
+sendHappyMessages();
