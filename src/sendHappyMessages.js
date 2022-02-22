@@ -1,4 +1,5 @@
 import { room } from "./room";
+import { randomInt } from "./utils";
 
 
 const happyMessagesList = [
@@ -14,16 +15,16 @@ const happyMessagesList = [
 ]
 
 const happyMessages = () => {
-  var players = room.getPlayerList()
-  if (players.length > 1){
-    var playerList = players.filter(function(value){ return value.position !== null})
-    var message = playerList[Math.floor(Math.random() * playerList.length)].name.toUpperCase() + " " + happyMessagesList[Math.floor(Math.random() * happyMessagesList.length)]
-    room.sendAnnouncement(message, null, 0x0080ff, 'bold', 0)
+  var players = room.getPlayerList();
+  var playerList = players.filter((player) => player.position !== null);
+  if (players.length > 1 && playerList.length > 0) {
+    var message = playerList[randomInt(playerList.length)].name.toUpperCase() + " " + happyMessagesList[randomInt(happyMessagesList.length)];
+    room.sendAnnouncement(message, null, 0x0080ff, 'bold', 0);
   }   
 }
 
 function sendHappyMessages() {
-  setInterval(happyMessages, 60000)
+  setInterval(happyMessages, 60000);
 }
 
 export { sendHappyMessages };
