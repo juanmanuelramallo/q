@@ -36,6 +36,8 @@ import {
 import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
+import { sendHappyMessages } from "./sendHappyMessages"
+
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -84,4 +86,8 @@ room.onTeamGoal = function(team) {
 
 room.onTeamVictory = function(scores) {
   handleScoreboardTeamVictory(scores);
+}
+
+room.onRoomLink = function () {
+  sendHappyMessages();
 }
