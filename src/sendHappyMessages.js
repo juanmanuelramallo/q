@@ -16,7 +16,7 @@ const happyMessagesList = [
 const happyMessages = () => {
   var players = room.getPlayerList()
   if (players.length > 1){
-    var playerList = players.filter(function(value){ return value.id !== 0})
+    var playerList = players.filter(function(value){ return value.position !== null})
     var message = playerList[Math.floor(Math.random() * playerList.length)].name.toUpperCase() + " " + happyMessagesList[Math.floor(Math.random() * happyMessagesList.length)]
     room.sendAnnouncement(message, null, 0x0080ff, 'bold', 0)
   }   
