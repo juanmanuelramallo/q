@@ -35,6 +35,7 @@ import {
 } from "./restorePosition";
 import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
+import { playerNameUniqueness } from "./playerNameUniqueness";
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -45,6 +46,9 @@ room.onPlayerChat = function(player, message) {
 }
 
 room.onPlayerJoin = function(player) {
+  isUnique = playerNameUniqueness(player);
+  if (!isUnique) { return }
+
   room.setPlayerAdmin(player.id, true);
   initPersonalScoreboard(player);
   showScoreboardForPlayers([player], false);
