@@ -8,6 +8,8 @@ import { room } from './room';
 import { showScoreboard, downloadScoreboard } from './scoreboard';
 import { restorePosition } from './restorePosition';
 import { e } from './emojis';
+import { longbounceStadium } from './stadiums/longbounce';
+import { longbounce3v3 } from './stadiums/longbounce3v3';
 
 // Swaps the player from one team to the other
 function swapPlayers() {
@@ -51,6 +53,17 @@ var commands = {
   "!restore": {
     description: "Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas",
     func: function(player) { restorePosition(player) }
+  },
+  "!3v3": {
+    description: "Sale ese 3v3. Todos alaben al bicho (NO GUARDA STATS)",
+    func: function(player) { 
+      room.sendAnnouncement(`Alabado sea el Bicho ${e("bug")}  ${e("pray")}${e("prayerBeads")}`)
+      room.setCustomStadium(longbounce3v3)
+    }
+  },
+  "!2v2": {
+    description: "Sale ese 2v2",
+    func: function(player) { room.setCustomStadium(longbounceStadium) }
   },
 }
 

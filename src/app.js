@@ -6,7 +6,7 @@
  *
  *  Features & roadmap:
  *  [x] 1) Gives admin to all users
- *  [ ] 2) Sets longbounce as the stadium
+ *  [x] 2) Sets longbounce as the stadium
  *  [x] 3) Records matches
  *  [ ] 4) Celebrations with avatars
  *  [x] 5) Commands to manage a game: restart and swap
@@ -37,6 +37,8 @@ import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages } from "./sendHappyMessages"
+
+var stopRecordingStats = false
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -80,6 +82,8 @@ room.onPlayerBallKick = function(player) {
 }
 
 room.onTeamGoal = function(team) {
+  if (stopRecordingStats) return
+
   handleScoreboardTeamGoal(team);
 
   const scores = room.getScores()
@@ -88,6 +92,11 @@ room.onTeamGoal = function(team) {
   if (scores.red == scoreLimit || scores.blue == scoreLimit) {
     handleScoreboardTeamVictory(scores)
   }
+}
+
+room.onStadiumChange = function(newStadiumName, byPlayer) {
+  // TODO: Decide if we want to record stats in stadiums other than the classic 2v2 Longbounce
+  stopRecordingStats = newStadiumName !== 'Longbounce XXL from HaxMaps'
 }
 
 sendHappyMessages();
