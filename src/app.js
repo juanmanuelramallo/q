@@ -49,7 +49,7 @@ room.onPlayerChat = function(player, message) {
   handleCommandsFromChat(player, message);
 }
 
-room.onPlayerJoin = function (player) {
+room.onPlayerJoin = function(player) {
   const isUnique = playerNameUniqueness(player);
   if (!isUnique) { return }
 
