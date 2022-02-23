@@ -37,6 +37,7 @@ import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages } from "./sendHappyMessages"
+import { announcementMessages } from "./announcementMessages";
 
 var stopRecordingStats = false
 
@@ -48,13 +49,14 @@ room.onPlayerChat = function(player, message) {
   handleCommandsFromChat(player, message);
 }
 
-room.onPlayerJoin = function(player) {
-  isUnique = playerNameUniqueness(player);
+room.onPlayerJoin = function (player) {
+  const isUnique = playerNameUniqueness(player);
   if (!isUnique) { return }
 
   room.setPlayerAdmin(player.id, true);
   initPersonalScoreboard(player);
   showScoreboardForPlayers([player], false);
+  announcementMessages(player.name);
 }
 
 room.onPlayerLeave = function(player) {
