@@ -85,12 +85,13 @@ room.onTeamGoal = function(team) {
   if (stopRecordingStats) return
 
   handleScoreboardTeamGoal(team);
-}
 
-room.onTeamVictory = function(scores) {
-  if (stopRecordingStats) return
+  const scores = room.getScores()
+  const scoreLimit = scores.scoreLimit
 
-  handleScoreboardTeamVictory(scores);
+  if (scores.red == scoreLimit || scores.blue == scoreLimit) {
+    handleScoreboardTeamVictory(scores)
+  }
 }
 
 room.onStadiumChange = function(newStadiumName, byPlayer) {

@@ -71,8 +71,8 @@ function handleScoreboardTeamGoal(team) {
 }
 
 function handleScoreboardTeamVictory(scores) {
-  var redPlayers = room.getPlayerList().filter(function(player) {return player.team == 1});
-  var bluePlayers = room.getPlayerList().filter(function(player) {return player.team == 2});
+  var redPlayers = room.getPlayerList().filter(function(player) { return player.team == 1 });
+  var bluePlayers = room.getPlayerList().filter(function(player) { return player.team == 2 });
   var redWon = scores.red > scores.blue;
 
   redPlayers.forEach(function(player) {
