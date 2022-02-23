@@ -1,6 +1,7 @@
 import { room } from "./room";
 import { downloadFile } from "./downloadFile";
 import { e } from "./emojis";
+import { calculateNewEloDelta } from './eloCalculation';
 
 var personalScoreboard = {};
 var lastPlayerIdBallKick = null;
@@ -93,6 +94,7 @@ function handleScoreboardTeamVictory(scores) {
   var redPlayers = room.getPlayerList().filter(function(player) { return player.team == 1 });
   var bluePlayers = room.getPlayerList().filter(function(player) { return player.team == 2 });
   var redWon = scores.red > scores.blue;
+  var blueWon = !redWon;
 
   redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
@@ -102,6 +104,9 @@ function handleScoreboardTeamVictory(scores) {
     } else {
       personalScoreboard[player.name].gamesLost++;
     }
+
+    personalScoreboard[player.name].elo ||= 1500;
+    personalScoreboard[player.name].elo += calculateNewEloDelta(redPlayers, redWon, bluePlayers);
   });
 
   bluePlayers.forEach(function(player) {
@@ -112,6 +117,9 @@ function handleScoreboardTeamVictory(scores) {
     } else {
       personalScoreboard[player.name].gamesWon++;
     }
+
+    personalScoreboard[player.name].elo ||= 1500;
+    personalScoreboard[player.name].elo += calculateNewEloDelta(bluePlayers, blueWon, redPlayers);
   });
 
   showScoreboard();
