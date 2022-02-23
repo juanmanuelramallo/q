@@ -55,7 +55,7 @@ var commands = {
     func: function(player) { restorePosition(player) }
   },
   "!3v3": {
-    description: "Sale ese 3v3. Todos alaben al bicho",
+    description: "Sale ese 3v3. Todos alaben al bicho (NO GUARDA STATS)",
     func: function(player) { room.setCustomStadium(longbounce3v3) }
   },
   "!2v2": {
