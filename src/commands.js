@@ -56,7 +56,10 @@ var commands = {
   },
   "!3v3": {
     description: "Sale ese 3v3. Todos alaben al bicho (NO GUARDA STATS)",
-    func: function(player) { room.setCustomStadium(longbounce3v3) }
+    func: function(player) { 
+      room.sendAnnouncement(`Alabado sea el Bicho ${e("bug")}  ${e("pray")}${e("prayerBeads")}`)
+      room.setCustomStadium(longbounce3v3)
+    }
   },
   "!2v2": {
     description: "Sale ese 2v2",
