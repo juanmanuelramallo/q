@@ -6,7 +6,7 @@
  *
  *  Features & roadmap:
  *  [x] 1) Gives admin to all users
- *  [ ] 2) Sets longbounce as the stadium
+ *  [x] 2) Sets longbounce as the stadium
  *  [x] 3) Records matches
  *  [ ] 4) Celebrations with avatars
  *  [x] 5) Commands to manage a game: restart and swap
