@@ -81,10 +81,13 @@ room.onPlayerBallKick = function(player) {
 
 room.onTeamGoal = function(team) {
   handleScoreboardTeamGoal(team);
-}
 
-room.onTeamVictory = function(scores) {
-  handleScoreboardTeamVictory(scores);
+  const scores = room.getScores()
+  const scoreLimit = scores.scoreLimit
+
+  if (scores.red == scoreLimit || scores.blue == scoreLimit) {
+    handleScoreboardTeamVictory(scores)
+  }
 }
 
 sendHappyMessages();
