@@ -1,4 +1,5 @@
 # Nietobot
+[![CI](https://github.com/juanmanuelramallo/q/actions/workflows/ci.yml/badge.svg)](https://github.com/juanmanuelramallo/q/actions/workflows/ci.yml)
 
 q
 
