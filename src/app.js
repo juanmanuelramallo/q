@@ -36,8 +36,7 @@ import {
 import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
-import { sendHappyMessages } from "./sendHappyMessages"
-import { announcementMessages } from "./announcementMessages";
+import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
 
 var stopRecordingStats = false
 
