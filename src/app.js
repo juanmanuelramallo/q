@@ -37,6 +37,7 @@ import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages } from "./sendHappyMessages"
+import { handleQ, handleEz, handleSry } from "./avatarMagic";
 
 var stopRecordingStats = false
 
@@ -46,6 +47,14 @@ room.onGameTick = function() {
 
 room.onPlayerChat = function(player, message) {
   handleCommandsFromChat(player, message);
+
+  if (message === 'q') {
+    handleQ(player);
+  } else if (message === 'ez') {
+    handleEz(player);
+  } else if (message === 'sry') {
+    handleSry(player);
+  }
 }
 
 room.onPlayerJoin = function(player) {
