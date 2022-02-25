@@ -1,7 +1,6 @@
 import { room } from "./room";
 import { randomInt } from "./utils";
 
-
 const happyMessagesList = [
   "JUGAS MEJOR QUE MANANA",
   "RETIRATE HIJO DE PUTA",
@@ -31,7 +30,7 @@ const happyMessages = () => {
   if (playerList.length > 0) {
     var message = playerList[randomInt(playerList.length)].name.toUpperCase() + " " + happyMessagesList[randomInt(happyMessagesList.length)];
     room.sendAnnouncement(message, null, 0x0080ff, 'bold', 0);
-  }   
+  }
 }
 
 function sendHappyMessages() {

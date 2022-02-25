@@ -4,7 +4,6 @@
   "description": "",
   "source": "src/app.js",
   "main": "dist/app.js",
-  "module": "dist/module.js",
   "scripts": {
     "test": "jest",
     "start": "parcel",

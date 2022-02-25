@@ -1,9 +1,3 @@
-/******************************************************************************
- *
- * Commands
- *
- *****************************************************************************/
-
 import { room } from './room';
 import { showScoreboard, downloadScoreboard } from './scoreboard';
 import { restorePosition } from './restorePosition';
@@ -56,7 +50,7 @@ var commands = {
   },
   "!3v3": {
     description: "Sale ese 3v3. Todos alaben al bicho (NO GUARDA STATS)",
-    func: function(player) { 
+    func: function(player) {
       room.sendAnnouncement(`Alabado sea el Bicho ${e("bug")}  ${e("pray")}${e("prayerBeads")}`)
       room.setCustomStadium(longbounce3v3)
     }
@@ -79,7 +73,12 @@ function showHelp() {
 function handleCommandsFromChat(player, message) {
   if (message[0] != "!") return;
 
-  commands[message].func.call(this, player);
+  var command = commands[message];
+  if (command) {
+    command.func.call(this, player);
+  } else {
+    room.sendAnnouncement(e("thinkingFace") + " Como que no te entiendahm");
+  }
 }
 
 export { handleCommandsFromChat };
