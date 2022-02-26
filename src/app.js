@@ -37,6 +37,7 @@ import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages } from "./sendHappyMessages"
+import playersElo from "./playersElo";
 
 var stopRecordingStats = false
 
@@ -46,15 +47,6 @@ room.onGameTick = function() {
 
 room.onPlayerChat = function(player, message) {
   handleCommandsFromChat(player, message);
-}
-
-room.onPlayerJoin = function(player) {
-  isUnique = playerNameUniqueness(player);
-  if (!isUnique) { return }
-
-  room.setPlayerAdmin(player.id, true);
-  initPersonalScoreboard(player);
-  showScoreboardForPlayers([player], false);
 }
 
 room.onPlayerLeave = function(player) {
@@ -99,4 +91,18 @@ room.onStadiumChange = function(newStadiumName, byPlayer) {
   stopRecordingStats = newStadiumName !== 'Longbounce XXL from HaxMaps'
 }
 
+async function initOnPlayerJoin() {
+  let elos = await playersElo;
+
+  room.onPlayerJoin = function(player) {
+    isUnique = playerNameUniqueness(player);
+    if (!isUnique) { return }
+
+    room.setPlayerAdmin(player.id, true);
+    initPersonalScoreboard(player, elos);
+    showScoreboardForPlayers([player], false);
+  }
+}
+
+initOnPlayerJoin();
 sendHappyMessages();
