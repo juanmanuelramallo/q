@@ -27,6 +27,7 @@ function initPersonalScoreboard(player) {
 
   personalScoreboard[player.name] = {
     assists: 0,
+    elo: 1500,
     gamesLost: 0,
     gamesPlayed: 0,
     gamesWon: 0,
@@ -51,11 +52,19 @@ function showScoreboardForPlayers(players, showInfo = true) {
 
   var scoreboard = "";
   if (showInfo) {
-    scoreboard += "PJ: Partidos jugados - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\n"
+    scoreboard += "PJ: Partidos jugados - ELO: Ranking del jugador - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\n"
   }
-  scoreboard += "PJ\tPG\tPP\tG\tA\tAG\tJugador\n";
+  scoreboard += "PJ\tELO\tPG\tPP\tG\tA\tAG\tJugador\n";
   players.forEach(function(player) {
-    scoreboard += personalScoreboard[player.name].gamesPlayed + "\t" + personalScoreboard[player.name].gamesWon + "\t" + personalScoreboard[player.name].gamesLost + "\t" + personalScoreboard[player.name].goals + "\t" + personalScoreboard[player.name].assists + "\t" + personalScoreboard[player.name].ownGoals + "\t" + player.name + "\n";
+    scoreboard +=
+      personalScoreboard[player.name].gamesPlayed + "\t"
+        + personalScoreboard[player.name].elo + "\t"
+        + personalScoreboard[player.name].gamesWon + "\t"
+        + personalScoreboard[player.name].gamesLost + "\t"
+        + personalScoreboard[player.name].goals + "\t"
+        + personalScoreboard[player.name].assists + "\t"
+        + personalScoreboard[player.name].ownGoals + "\t"
+        + player.name + "\n";
   });
 
   room.sendAnnouncement(scoreboard, null);
@@ -104,8 +113,7 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesLost++;
     }
 
-    personalScoreboard[player.name].elo ||= 1500;
-    personalScoreboard[player.name].elo += calculateNewEloDelta(redPlayers, redWon, bluePlayers);
+    personalScoreboard[player.name].elo += calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
   });
 
   getBluePlayers().forEach(function(player) {
@@ -117,8 +125,7 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesWon++;
     }
 
-    personalScoreboard[player.name].elo ||= 1500;
-    personalScoreboard[player.name].elo += calculateNewEloDelta(bluePlayers, blueWon, redPlayers);
+    personalScoreboard[player.name].elo += calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
   });
 
   showScoreboard();
@@ -131,6 +138,7 @@ function exportScoreboardToCSV() {
     csv += playerName + "," +
       today.toISOString() + "," +
       personalScoreboard[playerName].gamesPlayed + "," +
+      personalScoreboard[playerName].elo + "," +
       personalScoreboard[playerName].gamesWon + "," +
       personalScoreboard[playerName].gamesLost + "," +
       personalScoreboard[playerName].goals + "," +
