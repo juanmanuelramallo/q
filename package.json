@@ -4,12 +4,10 @@
   "description": "",
   "source": "src/app.js",
   "main": "dist/app.js",
-  "module": "dist/module.js",
   "scripts": {
     "test": "jest",
-    "start": "parcel",
-    "build": "parcel build",
-    "watch": "parcel watch"
+    "build": "esbuild src/app.js --bundle --outfile=dist/app.js",
+    "watch": "esbuild src/app.js --bundle --outfile=dist/app.js --watch"
   },
   "author": "esviernes.com",
   "license": "ISC",
@@ -17,7 +15,9 @@
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
     "babel-jest": "^27.5.1",
-    "jest": "^27.5.1",
-    "parcel": "^2.3.2"
+    "jest": "^27.5.1"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.23"
   }
 }

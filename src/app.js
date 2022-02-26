@@ -26,6 +26,8 @@ import {
   handleScoreboardTeamVictory,
   initPersonalScoreboard,
   showScoreboardForPlayers,
+  pauseScoreboard,
+  isScoreboardPaused
 } from "./scoreboard";
 import { e } from "./emojis";
 import {
@@ -36,10 +38,9 @@ import {
 import { handleCommandsFromChat } from "./commands";
 import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameStatus";
 import { playerNameUniqueness } from "./playerNameUniqueness";
-import { sendHappyMessages } from "./sendHappyMessages"
+import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
+import { handleQ, handleEz, handleSry } from "./avatarMagic";
 import playersElo from "./playersElo";
-
-var stopRecordingStats = false
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -47,6 +48,14 @@ room.onGameTick = function() {
 
 room.onPlayerChat = function(player, message) {
   handleCommandsFromChat(player, message);
+
+  if (message === 'q') {
+    handleQ(player);
+  } else if (message === 'ez') {
+    handleEz(player);
+  } else if (message === 'sry') {
+    handleSry(player);
+  }
 }
 
 room.onPlayerLeave = function(player) {
@@ -74,8 +83,6 @@ room.onPlayerBallKick = function(player) {
 }
 
 room.onTeamGoal = function(team) {
-  if (stopRecordingStats) return
-
   handleScoreboardTeamGoal(team);
 
   const scores = room.getScores()
@@ -86,21 +93,17 @@ room.onTeamGoal = function(team) {
   }
 }
 
-room.onStadiumChange = function(newStadiumName, byPlayer) {
-  // TODO: Decide if we want to record stats in stadiums other than the classic 2v2 Longbounce
-  stopRecordingStats = newStadiumName !== 'Longbounce XXL from HaxMaps'
-}
-
 async function initOnPlayerJoin() {
   let elos = await playersElo;
 
   room.onPlayerJoin = function(player) {
-    isUnique = playerNameUniqueness(player);
+    const isUnique = playerNameUniqueness(player);
     if (!isUnique) { return }
 
     room.setPlayerAdmin(player.id, true);
     initPersonalScoreboard(player, elos);
     showScoreboardForPlayers([player], false);
+    announcementMessages(player.name);
   }
 }
 

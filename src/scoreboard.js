@@ -1,10 +1,20 @@
 import { room } from "./room";
 import { downloadFile } from "./downloadFile";
+import { e } from "./emojis";
 import { calculateNewEloDelta } from './eloCalculation';
 
 var personalScoreboard = {};
 var lastPlayerIdBallKick = null;
 var secondLastPlayerIdBallKick = null;
+var scoreboardPaused = false;
+
+function isScoreboardPaused() {
+  return scoreboardPaused;
+}
+
+function pauseScoreboard(paused) {
+  scoreboardPaused = paused;
+}
 
 function clearLastBallKicks() {
   lastPlayerIdBallKick = null;
@@ -57,6 +67,9 @@ function showScoreboardForPlayers(players, showInfo = true) {
   });
 
   room.sendAnnouncement(scoreboard, null);
+  if (scoreboardPaused) {
+    room.sendAnnouncement(e("redExclamationMark") + "Scoreboard pausado. Usa !usc para reanudar.");
+  }
 }
 
 function handleScoreboardBallKick(player) {
@@ -65,6 +78,9 @@ function handleScoreboardBallKick(player) {
 }
 
 function handleScoreboardTeamGoal(team) {
+  // Early return if scoreboard is disabled
+  if (scoreboardPaused) { return; }
+
   var player = room.getPlayer(lastPlayerIdBallKick);
   var secondPlayer = room.getPlayer(secondLastPlayerIdBallKick);
 
@@ -81,6 +97,9 @@ function handleScoreboardTeamGoal(team) {
 }
 
 function handleScoreboardTeamVictory(scores) {
+  // Early return if scoreboard is disabled
+  if (scoreboardPaused) { return; }
+
   var redPlayers = room.getPlayerList().filter(function(player) { return player.team == 1 });
   var bluePlayers = room.getPlayerList().filter(function(player) { return player.team == 2 });
   var redWon = scores.red > scores.blue;
@@ -146,5 +165,7 @@ export {
   handleScoreboardTeamVictory,
   initPersonalScoreboard,
   showScoreboard,
-  showScoreboardForPlayers
+  showScoreboardForPlayers,
+  pauseScoreboard,
+  isScoreboardPaused
 }
