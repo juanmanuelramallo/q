@@ -26,6 +26,8 @@ import {
   handleScoreboardTeamVictory,
   initPersonalScoreboard,
   showScoreboardForPlayers,
+  pauseScoreboard,
+  isScoreboardPaused
 } from "./scoreboard";
 import { e } from "./emojis";
 import {
@@ -38,8 +40,6 @@ import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameSt
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
 import { handleQ, handleEz, handleSry } from "./avatarMagic";
-
-var stopRecordingStats = false
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -92,8 +92,6 @@ room.onPlayerBallKick = function(player) {
 }
 
 room.onTeamGoal = function(team) {
-  if (stopRecordingStats) return
-
   handleScoreboardTeamGoal(team);
 
   const scores = room.getScores()
@@ -102,11 +100,6 @@ room.onTeamGoal = function(team) {
   if (scores.red == scoreLimit || scores.blue == scoreLimit) {
     handleScoreboardTeamVictory(scores)
   }
-}
-
-room.onStadiumChange = function(newStadiumName, byPlayer) {
-  // TODO: Decide if we want to record stats in stadiums other than the classic 2v2 Longbounce
-  stopRecordingStats = newStadiumName !== 'Longbounce XXL from HaxMaps'
 }
 
 sendHappyMessages();

@@ -1,5 +1,5 @@
 import { room } from './room';
-import { showScoreboard, downloadScoreboard } from './scoreboard';
+import { showScoreboard, downloadScoreboard, pauseScoreboard } from './scoreboard';
 import { restorePosition } from './restorePosition';
 import { e } from './emojis';
 import { longbounceStadium } from './stadiums/longbounce';
@@ -39,6 +39,20 @@ var commands = {
   "!sc": {
     description: "Give me the stats daddy",
     func: function(player) { showScoreboard() }
+  },
+  "!psc": {
+    description: "Pausar el scoreboard",
+    func: function(player) {
+      pauseScoreboard(true);
+      room.sendAnnouncement(e("redExclamationMark") + "Scoreboard pausado por " + player.name);
+    }
+  },
+  "!usc": {
+    description: "Resumir el conteo en el scoreboard",
+    func: function(player) {
+      pauseScoreboard(false);
+      room.sendAnnouncement(e("redExclamationMark") + "Scoreboard resumido por " + player.name);
+    }
   },
   "!ds": {
     description: "Descarga el scoreboard en csv",
