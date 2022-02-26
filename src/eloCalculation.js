@@ -1,14 +1,14 @@
 
-function calculateNewEloDelta(teamPlayers, hasWon, opponentTeamPlayers) {
-  const teamElo = totalTeamElo(teamPlayers);
-  const opponentTeamElo = totalTeamElo(opponentTeamPlayers);
+function calculateNewEloDelta(teamPlayers, hasWon, opponentTeamPlayers, personalScoreboard) {
+  const teamElo = totalTeamElo(teamPlayers, personalScoreboard);
+  const opponentTeamElo = totalTeamElo(opponentTeamPlayers, personalScoreboard);
 
   return newEloDelta(teamElo, hasWon, opponentTeamElo);
 }
 
-function totalTeamElo(players) {
+function totalTeamElo(players, personalScoreboard) {
   return players.reduce(function(total, player) {
-    const playerElo = Object.values(player)[0].elo;
+    const playerElo = personalScoreboard[player.name].elo;
 
     return total + playerElo;
   }, 0);
