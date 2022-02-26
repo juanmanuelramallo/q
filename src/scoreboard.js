@@ -1,5 +1,6 @@
 import { room } from "./room";
 import { downloadFile } from "./downloadFile";
+import { e } from "./emojis";
 
 var personalScoreboard = {};
 var lastPlayerIdBallKick = null;
@@ -57,7 +58,7 @@ function showScoreboardForPlayers(players, showInfo = true) {
 
   room.sendAnnouncement(scoreboard, null);
   if (scoreboardPaused) {
-    room.sendAnnouncement('Scoreboard pausado. Usa !usc para reanudar.');
+    room.sendAnnouncement(e("redExclamationMark") + "Scoreboard pausado. Usa !usc para reanudar.");
   }
 }
 
