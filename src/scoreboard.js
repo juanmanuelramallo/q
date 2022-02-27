@@ -1,6 +1,7 @@
 import { room } from "./room";
 import { downloadFile } from "./downloadFile";
 import { e } from "./emojis";
+import { getBluePlayers, getRedPlayers } from "./players";
 
 var personalScoreboard = {};
 var lastPlayerIdBallKick = null;
@@ -90,11 +91,9 @@ function handleScoreboardTeamVictory(scores) {
   // Early return if scoreboard is disabled
   if (scoreboardPaused) { return; }
 
-  var redPlayers = room.getPlayerList().filter(function(player) { return player.team == 1 });
-  var bluePlayers = room.getPlayerList().filter(function(player) { return player.team == 2 });
   var redWon = scores.red > scores.blue;
 
-  redPlayers.forEach(function(player) {
+  getRedPlayers().forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
 
     if (redWon) {
@@ -104,7 +103,7 @@ function handleScoreboardTeamVictory(scores) {
     }
   });
 
-  bluePlayers.forEach(function(player) {
+  getBluePlayers().forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
 
     if (redWon) {

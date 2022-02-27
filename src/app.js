@@ -40,9 +40,11 @@ import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameSt
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
 import { handleQ, handleEz, handleSry } from "./avatarMagic";
+import { setTeamPlayers } from "./players";
 
 room.onGameTick = function() {
   storePlayerPositions();
+  setTeamPlayers();
 }
 
 room.onPlayerChat = function(player, message) {
