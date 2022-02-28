@@ -2,12 +2,28 @@ import { downloadFile } from './downloadFile';
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
 
-function postData(data, filename) {
+function postData(blob, filename) {
   var myHeaders = new Headers();
   myHeaders.append("Accept", "application/json;version=2");
 
   var formdata = new FormData();
-  formdata.append("match[recording]", data, filename);
+  formdata.append("match[recording]", blob, filename);
+
+  var redPlayers = getRedPlayers();
+  var bluePlayers = getBluePlayers();
+  var index = 0;
+
+  redPlayers.forEach(player => {
+    formdata.append(`match[match_players_attributes][${index}][team_id]`, "red");
+    formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
+    index++;
+  });
+
+  bluePlayers.forEach(player => {
+    formdata.append(`match[match_players_attributes][${index}][team_id]`, "blue");
+    formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
+    index++;
+  });
 
   var requestOptions = {
     method: "POST",
