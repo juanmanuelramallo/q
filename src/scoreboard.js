@@ -157,6 +157,10 @@ function downloadScoreboard() {
   downloadFile(filename, csv);
 }
 
+function getPersonalScoreboard() {
+  return personalScoreboard;
+}
+
 export {
   clearLastBallKicks,
   downloadScoreboard,
@@ -167,5 +171,6 @@ export {
   showScoreboard,
   showScoreboardForPlayers,
   pauseScoreboard,
-  isScoreboardPaused
+  isScoreboardPaused,
+  getPersonalScoreboard
 }
