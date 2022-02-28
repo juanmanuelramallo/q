@@ -103,8 +103,10 @@ function handleScoreboardTeamVictory(scores) {
 
   var redWon = scores.red > scores.blue;
   var blueWon = !redWon;
+  let redPlayers = getRedPlayers()
+  let bluePlayers = getBluePlayers();
 
-  getRedPlayers().forEach(function(player) {
+  redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
 
     if (redWon) {
@@ -116,7 +118,7 @@ function handleScoreboardTeamVictory(scores) {
     personalScoreboard[player.name].elo += calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
   });
 
-  getBluePlayers().forEach(function(player) {
+  bluePlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
 
     if (redWon) {
