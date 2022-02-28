@@ -4,6 +4,7 @@ import { restorePosition } from './restorePosition';
 import { e } from './emojis';
 import { longbounceStadium } from './stadiums/longbounce';
 import { longbounce3v3 } from './stadiums/longbounce3v3';
+import { showElosInJsonFormat } from "./playersElo";
 
 // Swaps the player from one team to the other
 function swapPlayers() {
@@ -57,6 +58,13 @@ var commands = {
   "!ds": {
     description: "Descarga el scoreboard en csv",
     func: function(player) { downloadScoreboard() }
+  },
+  "!se": {
+    description: 'Mostrar ELO de los jugadores (JSON)',
+    func: function(_player) {
+      room.sendAnnouncement('Mostrando el ELO de estos perros (JSON format)');
+      showElosInJsonFormat();
+    }
   },
   "!restore": {
     description: "Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas",

@@ -2,6 +2,7 @@ import { room } from "./room";
 import { downloadFile } from "./downloadFile";
 import { e } from "./emojis";
 import { getBluePlayers, getRedPlayers } from "./players";
+import { calculateNewEloDelta } from './eloCalculation';
 
 var personalScoreboard = {};
 var lastPlayerIdBallKick = null;
@@ -21,11 +22,12 @@ function clearLastBallKicks() {
   secondLastPlayerIdBallKick = null;
 }
 
-function initPersonalScoreboard(player) {
+function initPersonalScoreboard(player, playersElo) {
   if (personalScoreboard[player.name] != undefined) return;
 
   personalScoreboard[player.name] = {
     assists: 0,
+    elo: playersElo[player.name] ? playersElo[player.name].elo : 1500,
     gamesLost: 0,
     gamesPlayed: 0,
     gamesWon: 0,
@@ -50,11 +52,19 @@ function showScoreboardForPlayers(players, showInfo = true) {
 
   var scoreboard = "";
   if (showInfo) {
-    scoreboard += "PJ: Partidos jugados - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\n"
+    scoreboard += "PJ: Partidos jugados - ELO: Ranking del jugador - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\n"
   }
-  scoreboard += "PJ\tPG\tPP\tG\tA\tAG\tJugador\n";
+  scoreboard += "PJ\tELO\tPG\tPP\tG\tA\tAG\tJugador\n";
   players.forEach(function(player) {
-    scoreboard += personalScoreboard[player.name].gamesPlayed + "\t" + personalScoreboard[player.name].gamesWon + "\t" + personalScoreboard[player.name].gamesLost + "\t" + personalScoreboard[player.name].goals + "\t" + personalScoreboard[player.name].assists + "\t" + personalScoreboard[player.name].ownGoals + "\t" + player.name + "\n";
+    scoreboard +=
+      personalScoreboard[player.name].gamesPlayed + "\t"
+        + personalScoreboard[player.name].elo + "\t"
+        + personalScoreboard[player.name].gamesWon + "\t"
+        + personalScoreboard[player.name].gamesLost + "\t"
+        + personalScoreboard[player.name].goals + "\t"
+        + personalScoreboard[player.name].assists + "\t"
+        + personalScoreboard[player.name].ownGoals + "\t"
+        + player.name + "\n";
   });
 
   room.sendAnnouncement(scoreboard, null);
@@ -92,8 +102,11 @@ function handleScoreboardTeamVictory(scores) {
   if (scoreboardPaused) { return; }
 
   var redWon = scores.red > scores.blue;
+  var blueWon = !redWon;
+  let redPlayers = getRedPlayers()
+  let bluePlayers = getBluePlayers();
 
-  getRedPlayers().forEach(function(player) {
+  redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
 
     if (redWon) {
@@ -101,9 +114,11 @@ function handleScoreboardTeamVictory(scores) {
     } else {
       personalScoreboard[player.name].gamesLost++;
     }
+
+    personalScoreboard[player.name].elo += calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
   });
 
-  getBluePlayers().forEach(function(player) {
+  bluePlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
 
     if (redWon) {
@@ -111,6 +126,8 @@ function handleScoreboardTeamVictory(scores) {
     } else {
       personalScoreboard[player.name].gamesWon++;
     }
+
+    personalScoreboard[player.name].elo += calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
   });
 
   showScoreboard();
@@ -123,6 +140,7 @@ function exportScoreboardToCSV() {
     csv += playerName + "," +
       today.toISOString() + "," +
       personalScoreboard[playerName].gamesPlayed + "," +
+      personalScoreboard[playerName].elo + "," +
       personalScoreboard[playerName].gamesWon + "," +
       personalScoreboard[playerName].gamesLost + "," +
       personalScoreboard[playerName].goals + "," +
@@ -140,6 +158,10 @@ function downloadScoreboard() {
   downloadFile(filename, csv);
 }
 
+function getPersonalScoreboard() {
+  return personalScoreboard;
+}
+
 export {
   clearLastBallKicks,
   downloadScoreboard,
@@ -150,5 +172,6 @@ export {
   showScoreboard,
   showScoreboardForPlayers,
   pauseScoreboard,
-  isScoreboardPaused
+  isScoreboardPaused,
+  getPersonalScoreboard
 }

@@ -41,6 +41,7 @@ import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
 import { handleQ, handleEz, handleSry } from "./avatarMagic";
 import { setTeamPlayers } from "./players";
+import { playersElo } from "./playersElo";
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -57,16 +58,6 @@ room.onPlayerChat = function(player, message) {
   } else if (message === 'sry') {
     handleSry(player);
   }
-}
-
-room.onPlayerJoin = function(player) {
-  const isUnique = playerNameUniqueness(player);
-  if (!isUnique) { return }
-
-  room.setPlayerAdmin(player.id, true);
-  initPersonalScoreboard(player);
-  showScoreboardForPlayers([player], false);
-  announcementMessages(player.name);
 }
 
 room.onPlayerLeave = function(player) {
@@ -104,4 +95,19 @@ room.onTeamGoal = function(team) {
   }
 }
 
+async function initOnPlayerJoin() {
+  let elos = await playersElo();
+
+  room.onPlayerJoin = function(player) {
+    const isUnique = playerNameUniqueness(player);
+    if (!isUnique) { return }
+
+    room.setPlayerAdmin(player.id, true);
+    initPersonalScoreboard(player, elos);
+    showScoreboardForPlayers([player], false);
+    announcementMessages(player.name);
+  }
+}
+
+initOnPlayerJoin();
 sendHappyMessages();
