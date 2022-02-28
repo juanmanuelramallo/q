@@ -40,7 +40,7 @@ import { getGameStatus, setGameStatus, STARTED, STOPPED, PAUSED } from "./gameSt
 import { playerNameUniqueness } from "./playerNameUniqueness";
 import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
 import { handleQ, handleEz, handleSry } from "./avatarMagic";
-import playersElo from "./playersElo";
+import { playersElo } from "./playersElo";
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -94,7 +94,7 @@ room.onTeamGoal = function(team) {
 }
 
 async function initOnPlayerJoin() {
-  let elos = await playersElo;
+  let elos = await playersElo();
 
   room.onPlayerJoin = function(player) {
     const isUnique = playerNameUniqueness(player);
