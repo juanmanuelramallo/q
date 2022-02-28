@@ -6,8 +6,7 @@
   "main": "dist/app.js",
   "scripts": {
     "test": "jest",
-    "build": "esbuild src/app.js --bundle --outfile=dist/app.js",
-    "watch": "esbuild src/app.js --bundle --outfile=dist/app.js --watch"
+    "build": "node build.js"
   },
   "author": "esviernes.com",
   "license": "ISC",

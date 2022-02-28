@@ -5,6 +5,12 @@ q
 
 For instructions see top comment at [app.js](src/app.js).
 
+To use env vars when building:
+
+```
+RECORDING_SAVE_URI=example.com/api/matches npm run build
+```
+
 # Contributing
 
 c
