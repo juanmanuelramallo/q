@@ -48,7 +48,7 @@ function handleStopRecording(recording) {
   postData(blob, filename);
 
   // TODO: Perhaps stop downloading to host machine?
-  downloadFile(filename, recording);
+  // downloadFile(filename, recording);
 }
 
 export { handleStopRecording };
