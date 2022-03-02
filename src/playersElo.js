@@ -1,4 +1,3 @@
-import { room } from "./room";
 import { getPersonalScoreboard } from "./scoreboard";
 
 let url = "https://haxrecordings.s3.amazonaws.com/scoarboard.json";
@@ -9,7 +8,7 @@ let playersElo = async function () {
   return result.json();
 };
 
-const showElosInJsonFormat = async function () {
+const playersEloInJsonFormat = async function () {
   const previousElos = await playersElo();
   const newElos = getPersonalScoreboard();
   const allElos = {...previousElos, ...newElos};
@@ -20,11 +19,10 @@ const showElosInJsonFormat = async function () {
     },
     {}
   );
-  const elosInJSON = JSON.stringify(orderedElosByNickname);
-  room.sendAnnouncement(elosInJSON);
+  return JSON.stringify(orderedElosByNickname);
 }
 
 export {
   playersElo,
-  showElosInJsonFormat,
+  playersEloInJsonFormat,
 }
