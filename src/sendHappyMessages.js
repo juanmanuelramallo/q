@@ -3,7 +3,7 @@ import { randomInt } from "./utils";
 
 const happyMessagesList = [
   "JUGAS MEJOR QUE MANANA",
-  "RETIRATE ",
+  "RETIRATE",
   "AVERIGUASTE DE QUE JUGAS",
   "TENES LAG EN EL CEREBRO",
   "HACE ALGO",
