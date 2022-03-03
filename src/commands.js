@@ -108,21 +108,28 @@ async function assignPlayersRandomly() {
   const multipleSpectators = availablePlayers.length > 1
   const teamSizeDifference = Math.abs(redPlayers.length - bluePlayers.length)
 
-  let iterations = 1
+  if (areTeamsBalanced && !multipleSpectators) { return }
 
-  if (areTeamsBalanced) {
-    iterations = multipleSpectators ? 2 : 0
-  } else if (availablePlayers.length >= teamSizeDifference) {
-    iterations = teamSizeDifference
+  let iterations =  2
+
+  if (!areTeamsBalanced) {
+    iterations = availablePlayers.length >= teamSizeDifference ? teamSizeDifference : 1
   }
+
+  let redTeamSize = redPlayers.length
+  let blueTeamSize = bluePlayers.length
 
   for (let i = 0; i < iterations; i++) {
     const selectedPlayer = availablePlayers[randomInt(availablePlayers.length)]
-    const destinationTeam = 1 + (redPlayers.length > bluePlayers.length ? 1 : 0) 
+    const destinationTeam = redTeamSize > blueTeamSize ? BLUE_TEAM : RED_TEAM
     await room.setPlayerTeam(selectedPlayer.id, destinationTeam)
 
-    redPlayers = getPlayersForTeam(RED_TEAM)
-    bluePlayers = getPlayersForTeam(BLUE_TEAM)
+    if (destinationTeam === RED_TEAM) {
+      redTeamSize++
+    } else {
+      blueTeamSize++
+    }
+
     availablePlayers = getPlayersForTeam(SPECTATORS)
   }
 }
