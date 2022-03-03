@@ -6,6 +6,8 @@ import { longbounceStadium } from './stadiums/longbounce';
 import { longbounce3v3 } from './stadiums/longbounce3v3';
 import { playersEloInJsonFormat } from "./playersElo";
 import { downloadFile } from "./downloadFile";
+import { randomInt } from './utils';
+import { SPECTATORS, RED_TEAM, BLUE_TEAM } from './teams';
 
 // Swaps the player from one team to the other
 function swapPlayers() {
@@ -85,6 +87,48 @@ var commands = {
     description: "Sale ese 2v2",
     func: function(player) { room.setCustomStadium(longbounceStadium) }
   },
+  "!rand": {
+    description: "Elegir jugadores random",
+    func: function(player) {
+      room.sendAnnouncement(`${e("redExclamationMark")} ${player.name} tiro rand`);
+      assignPlayersRandomly()
+    }
+  }
+}
+
+async function assignPlayersRandomly() {
+  let availablePlayers = getPlayersForTeam(SPECTATORS)
+
+  if (!availablePlayers.length) { return }
+
+  let redPlayers = getPlayersForTeam(RED_TEAM)
+  let bluePlayers = getPlayersForTeam(BLUE_TEAM)
+
+  const areTeamsBalaneced = redPlayers.length === bluePlayers.length
+  const multipleSpectators = availablePlayers.length > 1
+
+  let iterations = 1
+
+  if (areTeamsBalaneced && multipleSpectators) {
+    iterations = 2
+  } else if (areTeamsBalaneced && !multipleSpectators) {
+    iterations = 0
+  }
+
+  for (let i = 0; i < iterations; i++) {
+    const selectedPlayer = availablePlayers[randomInt(availablePlayers.length)]
+    console.log(`Iteration: ${i + 1} - ${redPlayers.length} vs ${bluePlayers.length}`)
+    const destinationTeam = 1 + (redPlayers.length > bluePlayers.length ? 1 : 0) 
+    await room.setPlayerTeam(selectedPlayer.id, destinationTeam)
+
+    redPlayers = getPlayersForTeam(RED_TEAM)
+    bluePlayers = getPlayersForTeam(BLUE_TEAM)
+    availablePlayers = getPlayersForTeam(SPECTATORS)
+  }
+}
+
+function getPlayersForTeam(team) {
+  return room.getPlayerList().filter(player => player.team === team)
 }
 
 function showHelp() {
