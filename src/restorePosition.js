@@ -8,6 +8,7 @@ import { room } from "./room";
 import { e } from "./emojis";
 import { setGameStatus, getGameStatus, STOPPED, PAUSED } from "./gameStatus";
 import { randomInt } from "./utils";
+import { SPECTATORS } from "./teams";
 
 var playerPositions = {};
 
@@ -20,7 +21,7 @@ function storePlayerPositions() {
 
   var players = room.getPlayerList();
   players.forEach(function(player) {
-    if (player.team == 0) return;
+    if (player.team == SPECTATORS) return;
     if (playerPositions[player.name] == undefined) {
       playerPositions[player.name] = {};
     }
@@ -60,7 +61,7 @@ function handleRestorePositionPlayerLeave(player) {
     room.sendAnnouncement(e("faceWithSymbolsOverMouth") + "Rage quit " + player.name + "?", null);
   }
 
-  if (player.team == 0) return;
+  if (player.team == SPECTATORS) return;
 
   room.pauseGame(true);
   playerPositions[player.name].restoreEnabled = true;

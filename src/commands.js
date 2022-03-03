@@ -12,7 +12,7 @@ import { SPECTATORS, RED_TEAM, BLUE_TEAM } from './teams';
 // Swaps the player from one team to the other
 function swapPlayers() {
   room.getPlayerList().forEach(function(player) {
-    if (player.team == 0) return;
+    if (player.team == SPECTATORS) return;
 
     // y = mx + b --> equation of a straight line
     // y = -x + b --> with b=3 (x,y) = (1,2) (2,1)
@@ -104,15 +104,13 @@ async function assignPlayersRandomly() {
   let redPlayers = getPlayersForTeam(RED_TEAM)
   let bluePlayers = getPlayersForTeam(BLUE_TEAM)
 
-  const areTeamsBalaneced = redPlayers.length === bluePlayers.length
+  const areTeamsBalanced = redPlayers.length === bluePlayers.length
   const multipleSpectators = availablePlayers.length > 1
 
   let iterations = 1
 
-  if (areTeamsBalaneced && multipleSpectators) {
-    iterations = 2
-  } else if (areTeamsBalaneced && !multipleSpectators) {
-    iterations = 0
+  if (areTeamsBalanced) {
+    iterations = multipleSpectators ? 2 : 0
   }
 
   for (let i = 0; i < iterations; i++) {
