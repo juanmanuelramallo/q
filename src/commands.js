@@ -6,11 +6,13 @@ import { longbounceStadium } from './stadiums/longbounce';
 import { longbounce3v3 } from './stadiums/longbounce3v3';
 import { playersEloInJsonFormat } from "./playersElo";
 import { downloadFile } from "./downloadFile";
+import { randomInt } from './utils';
+import { SPECTATORS, RED_TEAM, BLUE_TEAM } from './teams';
 
 // Swaps the player from one team to the other
 function swapPlayers() {
   room.getPlayerList().forEach(function(player) {
-    if (player.team == 0) return;
+    if (player.team == SPECTATORS) return;
 
     // y = mx + b --> equation of a straight line
     // y = -x + b --> with b=3 (x,y) = (1,2) (2,1)
@@ -85,6 +87,55 @@ var commands = {
     description: "Sale ese 2v2",
     func: function(player) { room.setCustomStadium(longbounceStadium) }
   },
+  "!rand": {
+    description: "Elegir jugadores random",
+    func: function(player) {
+      room.sendAnnouncement(`${e("redExclamationMark")} ${player.name} tiro rand`);
+      assignPlayersRandomly()
+    }
+  }
+}
+
+async function assignPlayersRandomly() {
+  let availablePlayers = getPlayersForTeam(SPECTATORS)
+
+  if (!availablePlayers.length) { return }
+
+  let redPlayers = getPlayersForTeam(RED_TEAM)
+  let bluePlayers = getPlayersForTeam(BLUE_TEAM)
+
+  const areTeamsBalanced = redPlayers.length === bluePlayers.length
+  const multipleSpectators = availablePlayers.length > 1
+  const teamSizeDifference = Math.abs(redPlayers.length - bluePlayers.length)
+
+  if (areTeamsBalanced && !multipleSpectators) { return }
+
+  let iterations =  2
+
+  if (!areTeamsBalanced) {
+    iterations = availablePlayers.length >= teamSizeDifference ? teamSizeDifference : 1
+  }
+
+  let redTeamSize = redPlayers.length
+  let blueTeamSize = bluePlayers.length
+
+  for (let i = 0; i < iterations; i++) {
+    const selectedPlayer = availablePlayers[randomInt(availablePlayers.length)]
+    const destinationTeam = redTeamSize > blueTeamSize ? BLUE_TEAM : RED_TEAM
+    await room.setPlayerTeam(selectedPlayer.id, destinationTeam)
+
+    if (destinationTeam === RED_TEAM) {
+      redTeamSize++
+    } else {
+      blueTeamSize++
+    }
+
+    availablePlayers = getPlayersForTeam(SPECTATORS)
+  }
+}
+
+function getPlayersForTeam(team) {
+  return room.getPlayerList().filter(player => player.team === team)
 }
 
 function showHelp() {
