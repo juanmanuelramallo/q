@@ -1,6 +1,6 @@
 import { getPersonalScoreboard } from "./scoreboard";
 
-let url = "https://haxrecordings.s3.amazonaws.com/scoarboard.json";
+let url = "https://haxrecordings.s3.amazonaws.com/scoreboard.json";
 
 let playersElo = async function () {
   const result = await fetch(url)
