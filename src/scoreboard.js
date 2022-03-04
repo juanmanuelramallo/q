@@ -134,7 +134,7 @@ function handleScoreboardTeamVictory(scores) {
 }
 
 function exportScoreboardToCSV() {
-  var csv = "playerName,dateTime,gamesPlayed,gamesWon,gamesLost,goals,assists,ownGoals\n";
+  var csv = "playerName,dateTime,gamesPlayed,elo,gamesWon,gamesLost,goals,assists,ownGoals\n";
   var today = new Date();
   Object.keys(personalScoreboard).map(function(playerName) {
     csv += playerName + "," +
