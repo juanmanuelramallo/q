@@ -54,7 +54,7 @@ function showScoreboardForPlayers(players, showInfo = true) {
   if (showInfo) {
     scoreboard += "PJ: Partidos jugados - ELO: Ranking del jugador - PG: Partidos ganados - PP: Partidos perdidos - G: Goles a favor - A: Asistencias - AG: Autogoles\n\n"
   }
-  scoreboard += "PJ\tELO\tPG\tPP\tG\tA\tAG\tJugador\n";
+  scoreboard += "PJ\tELO\t\tPG\tPP\tG\tA\tAG\tJugador\n";
   players.forEach(function(player) {
     scoreboard +=
       personalScoreboard[player.name].gamesPlayed + "\t"
