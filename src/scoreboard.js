@@ -22,12 +22,12 @@ function clearLastBallKicks() {
   secondLastPlayerIdBallKick = null;
 }
 
-function initPersonalScoreboard(player, playersElo) {
+function initPersonalScoreboard(player, elo) {
   if (personalScoreboard[player.name] != undefined) return;
 
   personalScoreboard[player.name] = {
     assists: 0,
-    elo: playersElo[player.name] ? playersElo[player.name].elo : 1500,
+    elo: elo || 1500,
     currentEloDelta: 0,
     gamesLost: 0,
     gamesPlayed: 0,
