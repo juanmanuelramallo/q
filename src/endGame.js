@@ -1,7 +1,7 @@
 import { downloadFile } from './downloadFile';
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
-import { getEloDeltaForPlayer } from "./scoreboard";
+import { isScoreboardPaused, getEloDeltaForPlayer } from "./scoreboard";
 
 function postData(blob, filename) {
   var myHeaders = new Headers();
@@ -42,6 +42,8 @@ function postData(blob, filename) {
 }
 
 function handleEndGame(recording) {
+  if (isScoreboardPaused()) { return; }
+
   var filename = [Date.now()];
   filename = filename.concat(getRedPlayers().map(player => sanitize(player.name)));
   filename = filename.concat('vs');

@@ -84,6 +84,10 @@ room.onPlayerBallKick = function(player) {
 }
 
 room.onTeamGoal = function(team) {
+  if (isScoreboardPaused()) {
+    room.sendAnnouncement(e("redExclamationMark") + " Scoreboard pausado (no se guardan stats, ni elo, ni recordings)");
+  }
+
   handleScoreboardTeamGoal(team);
 
   const scores = room.getScores()
