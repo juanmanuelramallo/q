@@ -1,6 +1,7 @@
 import { downloadFile } from './downloadFile';
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
+import { getEloDeltaForPlayer } from "./scoreboard";
 
 function postData(blob, filename) {
   var myHeaders = new Headers();
@@ -16,12 +17,14 @@ function postData(blob, filename) {
   redPlayers.forEach(player => {
     formdata.append(`match[match_players_attributes][${index}][team_id]`, "red");
     formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
+    formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
     index++;
   });
 
   bluePlayers.forEach(player => {
     formdata.append(`match[match_players_attributes][${index}][team_id]`, "blue");
     formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
+    formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
     index++;
   });
 
@@ -38,7 +41,7 @@ function postData(blob, filename) {
     .catch(error => console.log('error', error));
 }
 
-function handleStopRecording(recording) {
+function handleEndGame(recording) {
   var filename = [Date.now()];
   filename = filename.concat(getRedPlayers().map(player => sanitize(player.name)));
   filename = filename.concat('vs');
@@ -46,9 +49,6 @@ function handleStopRecording(recording) {
   filename = filename.join('-') + '.hbr2';
   var blob = new Blob([recording], { type: 'text/plain;charset=UTF-8' });
   postData(blob, filename);
-
-  // TODO: Perhaps stop downloading to host machine?
-  // downloadFile(filename, recording);
 }
 
-export { handleStopRecording };
+export { handleEndGame };
