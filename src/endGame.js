@@ -2,6 +2,7 @@ import { downloadFile } from './downloadFile';
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
 import { isScoreboardPaused, getEloDeltaForPlayer } from "./scoreboard";
+import { room } from "./room";
 
 function postData(blob, filename) {
   var myHeaders = new Headers();
@@ -38,8 +39,11 @@ function postData(blob, filename) {
   var endpoint = process.env.BASE_API_URL + "/matches";
 
   fetch(endpoint, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
+    .then(response => response.json())
+    .then(result => {
+      console.log(result);
+      room.sendAnnouncement(result.match_url);
+    })
     .catch(error => console.log('error', error));
 }
 
