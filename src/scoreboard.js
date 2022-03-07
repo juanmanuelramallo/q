@@ -106,6 +106,7 @@ function handleScoreboardTeamVictory(scores) {
   var blueWon = !redWon;
   let redPlayers = getRedPlayers()
   let bluePlayers = getBluePlayers();
+  const personalScoreboardCopy = Object.assign({}, personalScoreboard);
 
   redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
@@ -116,7 +117,7 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesLost++;
     }
 
-    let eloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
+    let eloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboardCopy);
     personalScoreboard[player.name].elo += eloDelta;
     personalScoreboard[player.name].currentEloDelta = eloDelta;
   });
@@ -130,7 +131,7 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesWon++;
     }
 
-    let eloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
+    let eloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboardCopy);
     personalScoreboard[player.name].elo += eloDelta;
     personalScoreboard[player.name].currentEloDelta = eloDelta;
   });

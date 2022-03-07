@@ -2,47 +2,47 @@ import { calculateNewEloDelta } from '../src/eloCalculation';
 
 let teamA = [
   {
-    name: 'nostra',
+    name: 'kevo locurita',
   },
   {
-    name: 'andy',
+    name: 'El Bicho',
   },
 ];
 
 let teamB = [
   {
-    name: 'kevo',
+    name: 'pete god',
   },
   {
-    name: 'gaspi',
+    name: 'esviernes.com',
   },
 ];
 
-const personalScoreboard = {
-  nostra: {
-    elo: 1400,
+const personalScoreboardCopy = {
+  'kevo locurita': {
+    elo: 1626,
   },
-  andy: {
-    elo: 1750,
+  'El Bicho': {
+    elo: 1528,
   },
-  kevo: {
-    elo: 1500,
+  'pete god': {
+    elo: 1432,
   },
-  gaspi: {
-    elo: 1600,
+  'esviernes.com': {
+    elo: 1577,
   },
 };
 
 describe('calculateNewEloDelta', () => {
   describe('when the team has won', () => {
     it('returns positive points variation for the teamA that has won', () => {
-      expect(calculateNewEloDelta(teamA, true, teamB, personalScoreboard)).toBe(13);
+      expect(calculateNewEloDelta(teamA, true, teamB, personalScoreboardCopy)).toBe(9);
     });
   });
 
   describe('when the team has lost', () => {
     it('returns negative points variation for the teamA that has lost', () => {
-      expect(calculateNewEloDelta(teamA, false, teamB, personalScoreboard)).toBe(-17);
+      expect(calculateNewEloDelta(teamA, false, teamB, personalScoreboardCopy)).toBe(-21);
     });
   });
 });
