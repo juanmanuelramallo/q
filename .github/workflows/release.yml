@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          RECORDING_SAVE_URI: ${{ secrets.RECORDING_SAVE_URI }}
+          BASE_API_URL: ${{ secrets.BASE_API_URL }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
