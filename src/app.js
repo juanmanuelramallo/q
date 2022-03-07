@@ -108,7 +108,7 @@ async function initOnPlayerJoin() {
     if (!isUnique) { return }
 
     room.setPlayerAdmin(player.id, true);
-    initPersonalScoreboard(player, elos);
+    initPersonalScoreboard(player, elos[player.name]);
     showScoreboardForPlayers([player], false);
     announcementMessages(player.name);
   }

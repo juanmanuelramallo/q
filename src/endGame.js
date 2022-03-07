@@ -35,7 +35,9 @@ function postData(blob, filename) {
     redirect: "follow"
   };
 
-  fetch(process.env.RECORDING_SAVE_URI, requestOptions)
+  var endpoint = process.env.BASE_API_URL + "/matches";
+
+  fetch(endpoint, requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
