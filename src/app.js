@@ -17,7 +17,7 @@
  *  [ ] 10) New game mode? Portalhax, ball passes through portals
  */
 
-import { handleStopRecording } from "./recording";
+import { handleEndGame } from "./endGame";
 import { room } from "./room";
 import {
   clearLastBallKicks,
@@ -73,7 +73,6 @@ room.onGameStart = function(byPlayer) {
 
 room.onGameStop = function(byPlayer) {
   setGameStatus(STOPPED);
-  handleStopRecording(room.stopRecording());
 }
 
 room.onGamePause = function(byPlayer) {
@@ -85,13 +84,19 @@ room.onPlayerBallKick = function(player) {
 }
 
 room.onTeamGoal = function(team) {
+  if (isScoreboardPaused()) {
+    room.sendAnnouncement(e("redExclamationMark") + " Scoreboard pausado (no se guardan stats, ni elo, ni recordings)");
+  }
+
   handleScoreboardTeamGoal(team);
 
   const scores = room.getScores()
   const scoreLimit = scores.scoreLimit
 
+  // If red or blue reached the score limit -> game finished
   if (scores.red == scoreLimit || scores.blue == scoreLimit) {
     handleScoreboardTeamVictory(scores)
+    handleEndGame(room.stopRecording());
   }
 }
 

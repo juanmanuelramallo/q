@@ -1,4 +1,3 @@
-
 function calculateNewEloDelta(teamPlayers, hasWon, opponentTeamPlayers, personalScoreboard) {
   const teamElo = totalTeamElo(teamPlayers, personalScoreboard);
   const opponentTeamElo = totalTeamElo(opponentTeamPlayers, personalScoreboard);

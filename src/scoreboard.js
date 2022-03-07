@@ -28,6 +28,7 @@ function initPersonalScoreboard(player, playersElo) {
   personalScoreboard[player.name] = {
     assists: 0,
     elo: playersElo[player.name] ? playersElo[player.name].elo : 1500,
+    currentEloDelta: 0,
     gamesLost: 0,
     gamesPlayed: 0,
     gamesWon: 0,
@@ -115,7 +116,9 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesLost++;
     }
 
-    personalScoreboard[player.name].elo += calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
+    let eloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
+    personalScoreboard[player.name].elo += eloDelta;
+    personalScoreboard[player.name].currentEloDelta = eloDelta;
   });
 
   bluePlayers.forEach(function(player) {
@@ -127,7 +130,9 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesWon++;
     }
 
-    personalScoreboard[player.name].elo += calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
+    let eloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
+    personalScoreboard[player.name].elo += eloDelta;
+    personalScoreboard[player.name].currentEloDelta = eloDelta;
   });
 
   showScoreboard();
@@ -162,6 +167,10 @@ function getPersonalScoreboard() {
   return personalScoreboard;
 }
 
+function getEloDeltaForPlayer(player) {
+  return personalScoreboard[player.name].currentEloDelta;
+}
+
 export {
   clearLastBallKicks,
   downloadScoreboard,
@@ -173,5 +182,6 @@ export {
   showScoreboardForPlayers,
   pauseScoreboard,
   isScoreboardPaused,
-  getPersonalScoreboard
+  getPersonalScoreboard,
+  getEloDeltaForPlayer
 }
