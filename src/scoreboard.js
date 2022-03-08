@@ -104,8 +104,10 @@ function handleScoreboardTeamVictory(scores) {
 
   var redWon = scores.red > scores.blue;
   var blueWon = !redWon;
-  let redPlayers = getRedPlayers()
+  let redPlayers = getRedPlayers();
   let bluePlayers = getBluePlayers();
+  const redEloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
+  const blueEloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
 
   redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
@@ -116,9 +118,8 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesLost++;
     }
 
-    let eloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
-    personalScoreboard[player.name].elo += eloDelta;
-    personalScoreboard[player.name].currentEloDelta = eloDelta;
+    personalScoreboard[player.name].elo += redEloDelta;
+    personalScoreboard[player.name].currentEloDelta = redEloDelta;
   });
 
   bluePlayers.forEach(function(player) {
@@ -130,9 +131,8 @@ function handleScoreboardTeamVictory(scores) {
       personalScoreboard[player.name].gamesWon++;
     }
 
-    let eloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
-    personalScoreboard[player.name].elo += eloDelta;
-    personalScoreboard[player.name].currentEloDelta = eloDelta;
+    personalScoreboard[player.name].elo += blueEloDelta;
+    personalScoreboard[player.name].currentEloDelta = blueEloDelta;
   });
 
   showScoreboard();
