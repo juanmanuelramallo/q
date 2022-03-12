@@ -1,7 +1,6 @@
-import { downloadFile } from './downloadFile';
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
-import { isScoreboardPaused, getEloDeltaForPlayer } from "./scoreboard";
+import { isScoreboardPaused, getEloDeltaForPlayer, getPersonalScoreboard } from "./scoreboard";
 import { room } from "./room";
 
 function postData(blob, filename) {
@@ -28,6 +27,8 @@ function postData(blob, filename) {
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
     index++;
   });
+
+  formdata.append(`match[scoreboard]`, JSON.stringify(getPersonalScoreboard()));
 
   var requestOptions = {
     method: "POST",
