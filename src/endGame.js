@@ -28,7 +28,7 @@ function postData(blob, filename) {
     index++;
   });
 
-  formdata.append(`match[scoreboard]`, JSON.stringify(getPersonalScoreboard()));
+  formdata.append(`scoreboard_log[data]`, JSON.stringify(getPersonalScoreboard()));
 
   var requestOptions = {
     method: "POST",
