@@ -3,9 +3,10 @@ import { downloadFile } from "./downloadFile";
 import { e } from "./emojis";
 import { getBluePlayers, getRedPlayers } from "./players";
 import { calculateNewEloDelta } from './eloCalculation';
+import { RED_TEAM, BLUE_TEAM } from './teams';
 
 var personalScoreboard = {};
-var matchPlayerStats = {};
+var matchPlayerStats = {players: {}, winnerTeamId: 0};
 var lastPlayerIdBallKick = null;
 var secondLastPlayerIdBallKick = null;
 var scoreboardPaused = false;
@@ -26,12 +27,12 @@ function clearLastBallKicks() {
 function clearMatchPlayerStats() {
   let redPlayers = getRedPlayers();
   let bluePlayers = getBluePlayers();
-  matchPlayerStats = {};
+  matchPlayerStats = {players: {}, winnerTeamId: 0};
 
   [...redPlayers, ...bluePlayers].forEach(function (player) {
-    matchPlayerStats[player.name].goals = 0;
-    matchPlayerStats[player.name].assists = 0;
-    matchPlayerStats[player.name].ownGoals = 0;
+    matchPlayerStats.players[player.name].goals = 0;
+    matchPlayerStats.players[player.name].assists = 0;
+    matchPlayerStats.players[player.name].ownGoals = 0;
   });
 }
 
@@ -102,15 +103,15 @@ function handleScoreboardTeamGoal(team) {
   // TODO: Ignore goals if the game is stopped before finishing (?)
   if (player.team == team) {
     personalScoreboard[player.name].goals++;
-    matchPlayerStats[player.name].goals++;
+    matchPlayerStats.players[player.name].goals++;
 
     if (secondPlayer && secondPlayer.name != player.name && secondPlayer.team == team) {
       personalScoreboard[secondPlayer.name].assists++;
-      matchPlayerStats[secondPlayer.name].assists++;
+      matchPlayerStats.players[secondPlayer.name].assists++;
     }
   } else {
     personalScoreboard[player.name].ownGoals++;
-    matchPlayerStats[player.name].ownGoals++;
+    matchPlayerStats.players[player.name].ownGoals++;
   }
 }
 
@@ -124,6 +125,12 @@ function handleScoreboardTeamVictory(scores) {
   let bluePlayers = getBluePlayers();
   const redEloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
   const blueEloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
+
+  if (redWon) {
+    matchPlayerStats.winnerTeamId = RED_TEAM;
+  } else {
+    matchPlayerStats.winnerTeamId = BLUE_TEAM;
+  }
 
   redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
