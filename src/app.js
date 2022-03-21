@@ -21,6 +21,7 @@ import { handleEndGame } from "./endGame";
 import { room } from "./room";
 import {
   clearLastBallKicks,
+  clearMatchPlayerStats,
   handleScoreboardBallKick,
   handleScoreboardTeamGoal,
   handleScoreboardTeamVictory,
@@ -68,11 +69,13 @@ room.onGameStart = function(byPlayer) {
   setGameStatus(STARTED);
   clearLastBallKicks();
   clearPlayerPositions();
+  clearMatchPlayerStats();
   room.startRecording();
 }
 
 room.onGameStop = function(byPlayer) {
   setGameStatus(STOPPED);
+  clearMatchPlayerStats();
 }
 
 room.onGamePause = function(byPlayer) {

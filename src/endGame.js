@@ -1,6 +1,6 @@
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
-import { isScoreboardPaused, getEloDeltaForPlayer, getPersonalScoreboard } from "./scoreboard";
+import { isScoreboardPaused, getEloDeltaForPlayer, getMatchPlayerStats } from "./scoreboard";
 import { room } from "./room";
 
 function postData(blob, filename) {
@@ -12,12 +12,16 @@ function postData(blob, filename) {
 
   var redPlayers = getRedPlayers();
   var bluePlayers = getBluePlayers();
+  var matchPlayerStats = getMatchPlayerStats();
   var index = 0;
 
   redPlayers.forEach(player => {
     formdata.append(`match[match_players_attributes][${index}][team_id]`, "red");
     formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats[player.name].goals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats[player.name].assists);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats[player.name].ownGoals);
     index++;
   });
 
@@ -25,10 +29,11 @@ function postData(blob, filename) {
     formdata.append(`match[match_players_attributes][${index}][team_id]`, "blue");
     formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats[player.name].goals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats[player.name].assists);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats[player.name].ownGoals);
     index++;
   });
-
-  formdata.append(`scoreboard_log[data]`, JSON.stringify(getPersonalScoreboard()));
 
   var requestOptions = {
     method: "POST",
