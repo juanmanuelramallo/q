@@ -1,6 +1,6 @@
 import { getRedPlayers, getBluePlayers } from './players';
 import { sanitize } from "./utils";
-import { isScoreboardPaused, getEloDeltaForPlayer, getMatchPlayerStats } from "./scoreboard";
+import { isScoreboardPaused, getEloDeltaForPlayer, getMatchPlayerStats, getWinnerTeamId } from "./scoreboard";
 import { room } from "./room";
 
 function postData(blob, filename) {
@@ -10,7 +10,7 @@ function postData(blob, filename) {
 
   var formdata = new FormData();
   formdata.append("match[recording]", blob, filename);
-  formdata.append("match[winner_team_id]", matchPlayerStats.winnerTeamId);
+  formdata.append("match[winner_team_id]", getWinnerTeamId());
 
   var redPlayers = getRedPlayers();
   var bluePlayers = getBluePlayers();
@@ -20,9 +20,9 @@ function postData(blob, filename) {
     formdata.append(`match[match_players_attributes][${index}][team_id]`, "red");
     formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats.players[player.name].goals);
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats.players[player.name].assists);
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats.players[player.name].ownGoals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats[player.name].goals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats[player.name].assists);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats[player.name].ownGoals);
     index++;
   });
 
@@ -30,9 +30,9 @@ function postData(blob, filename) {
     formdata.append(`match[match_players_attributes][${index}][team_id]`, "blue");
     formdata.append(`match[match_players_attributes][${index}][player_attributes][name]`, player.name);
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats.players[player.name].goals);
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats.players[player.name].assists);
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats.players[player.name].ownGoals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats[player.name].goals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats[player.name].assists);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats[player.name].ownGoals);
     index++;
   });
 
