@@ -3,8 +3,11 @@ import { downloadFile } from "./downloadFile";
 import { e } from "./emojis";
 import { getBluePlayers, getRedPlayers } from "./players";
 import { calculateNewEloDelta } from './eloCalculation';
+import { RED_TEAM, BLUE_TEAM } from './teams';
 
 var personalScoreboard = {};
+var matchPlayerStats = {};
+var winnerTeamId = null;
 var lastPlayerIdBallKick = null;
 var secondLastPlayerIdBallKick = null;
 var scoreboardPaused = false;
@@ -20,6 +23,22 @@ function pauseScoreboard(paused) {
 function clearLastBallKicks() {
   lastPlayerIdBallKick = null;
   secondLastPlayerIdBallKick = null;
+}
+
+function clearMatchPlayerStats() {
+  let redPlayers = getRedPlayers();
+  let bluePlayers = getBluePlayers();
+  matchPlayerStats = {};
+
+  [...redPlayers, ...bluePlayers].forEach(function (player) {
+    matchPlayerStats[player.name].goals = 0;
+    matchPlayerStats[player.name].assists = 0;
+    matchPlayerStats[player.name].ownGoals = 0;
+  });
+}
+
+function clearWinnerTeamId() {
+  winnerTeamId = null;
 }
 
 function initPersonalScoreboard(player, elo) {
@@ -89,12 +108,15 @@ function handleScoreboardTeamGoal(team) {
   // TODO: Ignore goals if the game is stopped before finishing (?)
   if (player.team == team) {
     personalScoreboard[player.name].goals++;
+    matchPlayerStats[player.name].goals++;
 
     if (secondPlayer && secondPlayer.name != player.name && secondPlayer.team == team) {
       personalScoreboard[secondPlayer.name].assists++;
+      matchPlayerStats[secondPlayer.name].assists++;
     }
   } else {
     personalScoreboard[player.name].ownGoals++;
+    matchPlayerStats[player.name].ownGoals++;
   }
 }
 
@@ -108,6 +130,12 @@ function handleScoreboardTeamVictory(scores) {
   let bluePlayers = getBluePlayers();
   const redEloDelta = calculateNewEloDelta(redPlayers, redWon, bluePlayers, personalScoreboard);
   const blueEloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
+
+  if (redWon) {
+    winnerTeamId = RED_TEAM;
+  } else {
+    winnerTeamId = BLUE_TEAM;
+  }
 
   redPlayers.forEach(function(player) {
     personalScoreboard[player.name].gamesPlayed++;
@@ -167,12 +195,22 @@ function getPersonalScoreboard() {
   return personalScoreboard;
 }
 
+function getMatchPlayerStats() {
+  return matchPlayerStats;
+}
+
+function getWinnerTeamId() {
+  return winnerTeamId;
+}
+
 function getEloDeltaForPlayer(player) {
   return personalScoreboard[player.name].currentEloDelta;
 }
 
 export {
   clearLastBallKicks,
+  clearMatchPlayerStats,
+  clearWinnerTeamId,
   downloadScoreboard,
   handleScoreboardBallKick,
   handleScoreboardTeamGoal,
@@ -183,5 +221,7 @@ export {
   pauseScoreboard,
   isScoreboardPaused,
   getPersonalScoreboard,
+  getMatchPlayerStats,
+  getWinnerTeamId,
   getEloDeltaForPlayer
 }

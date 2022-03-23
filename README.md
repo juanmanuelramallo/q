@@ -8,7 +8,7 @@ For instructions see top comment at [app.js](src/app.js).
 To use env vars when building:
 
 ```
-BASE_API_URL=example.com/api/matches npm run build
+BASE_API_URL=https://example.com/api npm run build
 ```
 
 # Contributing
