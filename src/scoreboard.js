@@ -1,7 +1,7 @@
 import { room } from "./room";
 import { downloadFile } from "./downloadFile";
 import { e } from "./emojis";
-import { getBluePlayers, getRedPlayers } from "./players";
+import { getBluePlayers, getRedPlayers, setTeamPlayers } from "./players";
 import { calculateNewEloDelta } from './eloCalculation';
 import { RED_TEAM, BLUE_TEAM } from './teams';
 
@@ -26,11 +26,18 @@ function clearLastBallKicks() {
 }
 
 function clearMatchPlayerStats() {
-  let redPlayers = getRedPlayers();
-  let bluePlayers = getBluePlayers();
+  let redPlayers;
+  let bluePlayers;
+
+  // It seems like clearMatchPlayerStats is called earlier than room.onGameTick so team players are not set yet
+  setTeamPlayers();
+
+  redPlayers = getRedPlayers();
+  bluePlayers = getBluePlayers();
   matchPlayerStats = {};
 
   [...redPlayers, ...bluePlayers].forEach(function (player) {
+    matchPlayerStats[player.name] = {};
     matchPlayerStats[player.name].goals = 0;
     matchPlayerStats[player.name].assists = 0;
     matchPlayerStats[player.name].ownGoals = 0;

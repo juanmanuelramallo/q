@@ -77,7 +77,6 @@ room.onGameStart = function(byPlayer) {
 
 room.onGameStop = function(byPlayer) {
   setGameStatus(STOPPED);
-  clearMatchPlayerStats();
   clearWinnerTeamId();
 }
 
