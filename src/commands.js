@@ -68,7 +68,6 @@ var commands = {
       room.sendAnnouncement('Descargando el ELO de estos perros (JSON format)');
 
       const fileContent = await playersEloInJsonFormat();
-      console.log('FILEEEE', fileContent);
       downloadFile('scoreboard.json', fileContent);
     }
   },
