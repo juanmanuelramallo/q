@@ -139,9 +139,9 @@ function handleScoreboardTeamVictory(scores) {
   const blueEloDelta = calculateNewEloDelta(bluePlayers, blueWon, redPlayers, personalScoreboard);
 
   if (redWon) {
-    winnerTeamId = RED_TEAM;
+    winnerTeamId = "red";
   } else {
-    winnerTeamId = BLUE_TEAM;
+    winnerTeamId = "blue";
   }
 
   redPlayers.forEach(function(player) {
