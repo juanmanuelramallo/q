@@ -20,11 +20,21 @@ jobs:
             ${{ runner.os }}-node-
       - name: Install modules
         run: npm install
-      - name: Build
+      - name: Build Long
         run: npm run build
         env:
-          BASE_API_URL: ${{ secrets.BASE_API_URL }}
+          BASE_API_URL: ${{ secrets.LONG_API_URL }}
+          BUILD_NAME: 'long'
+      - name: Build Futsal
+        run: npm run build
+        env:
+          BASE_API_URL: ${{ secrets.FUTSAL_API_URL }}
+          BUILD_NAME: 'futsal'
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/app.js
+          files: dist/long.js
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/futsal.js
