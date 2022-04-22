@@ -4,6 +4,8 @@ import { restorePosition } from './restorePosition';
 import { e } from './emojis';
 import { longbounceStadium } from './stadiums/longbounce';
 import { longbounce3v3 } from './stadiums/longbounce3v3';
+import { volleyStadium } from './stadiums/volley';
+import { futsalStadium } from './stadiums/futsal';
 import { playersEloInJsonFormat } from "./playersElo";
 import { downloadFile } from "./downloadFile";
 import { randomInt } from './utils';
@@ -74,6 +76,20 @@ var commands = {
   "!restore": {
     description: "Si te desconectas en medio de una partida, podes correr !restore para volver a donde estabas",
     func: function(player) { restorePosition(player) }
+  },
+  "!volley": {
+    description: "Sale beach volley",
+    func: function (player) {
+      room.sendAnnouncement(e("redExclamationMark") + "Volley pedido por " + player.name, null);
+      room.setCustomStadium(volleyStadium)
+    }
+  },
+  "!futsal": {
+    description: "Sale futsal",
+    func: function (player) {
+      room.sendAnnouncement(e("redExclamationMark") + "Futsal pedido por " + player.name, null);
+      room.setCustomStadium(futsalStadium)
+    }
   },
   "!3v3": {
     description: "Sale ese 3v3. Todos alaben al bicho (NO GUARDA STATS)",
