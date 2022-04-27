@@ -22,7 +22,7 @@ function postData(blob, filename) {
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
     formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats[player.name].goals);
     formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats[player.name].assists);
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats[player.name].ownGoals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][own_goals]`, matchPlayerStats[player.name].ownGoals);
     index++;
   });
 
@@ -32,7 +32,7 @@ function postData(blob, filename) {
     formdata.append(`match[match_players_attributes][${index}][elo_change_attributes][value]`, getEloDeltaForPlayer(player));
     formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][goals]`, matchPlayerStats[player.name].goals);
     formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][assists]`, matchPlayerStats[player.name].assists);
-    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][ownGoals]`, matchPlayerStats[player.name].ownGoals);
+    formdata.append(`match[match_players_attributes][${index}][player_stat_attributes][own_goals]`, matchPlayerStats[player.name].ownGoals);
     index++;
   });
 
