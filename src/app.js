@@ -1,7 +1,7 @@
 /*
  *  How to use?
  *  1. Go to https://www.haxball.com/headless
- *  2. Paste this script into the console
+ *  2. Paste: var s=document.createElement('script');s.src='https://github.com/juanmanuelramallo/q/releases/latest/download/long.js';document.body.appendChild(s)
  *  3. GLHF
  *
  *  Features & roadmap:
