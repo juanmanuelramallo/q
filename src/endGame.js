@@ -3,7 +3,7 @@ import { sanitize } from "./utils";
 import { isScoreboardPaused, getEloDeltaForPlayer, getMatchPlayerStats, getWinnerTeamId } from "./scoreboard";
 import { room } from "./room";
 
-function postData(blob, filename) {
+function postData(blob, filename, redPlayers, bluePlayers) {
   var matchPlayerStats = getMatchPlayerStats();
   var myHeaders = new Headers();
   myHeaders.append("Accept", "application/json;version=2");
@@ -12,8 +12,6 @@ function postData(blob, filename) {
   formdata.append("match[recording]", blob, filename);
   formdata.append("match[winner_team_id]", getWinnerTeamId());
 
-  var redPlayers = getRedPlayers();
-  var bluePlayers = getBluePlayers();
   var index = 0;
 
   redPlayers.forEach(player => {
@@ -63,7 +61,16 @@ function handleEndGame(recording) {
   filename = filename.concat(getBluePlayers().map(player => sanitize(player.name)));
   filename = filename.join('-') + '.hbr2';
   var blob = new Blob([recording], { type: 'text/plain;charset=UTF-8' });
-  postData(blob, filename);
+  var redPlayers = getRedPlayers();
+  var bluePlayers = getBluePlayers();
+
+  postData(blob, filename, redPlayers, bluePlayers);
+
+  redPlayers.concat(bluePlayers).forEach(player => {
+    var value = getEloDeltaForPlayer(player);
+    var valueString = value > 0 ? `+${value}` : value;
+    room.sendAnnouncement(`${valueString} para ${player.name}`);
+  });
 }
 
 export { handleEndGame };
