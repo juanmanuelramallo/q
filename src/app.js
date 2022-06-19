@@ -44,6 +44,7 @@ import { sendHappyMessages, announcementMessages } from "./sendHappyMessages"
 import { handleQ, handleEz, handleSry } from "./avatarMagic";
 import { setTeamPlayers } from "./players";
 import { playersElo } from "./playersElo";
+import { startLoginTimeout } from "./login";
 
 room.onGameTick = function() {
   storePlayerPositions();
@@ -51,7 +52,7 @@ room.onGameTick = function() {
 }
 
 room.onPlayerChat = function(player, message) {
-  handleCommandsFromChat(player, message);
+  const result = handleCommandsFromChat(player, message);
 
   if (message === 'q') {
     handleQ(player);
@@ -60,6 +61,8 @@ room.onPlayerChat = function(player, message) {
   } else if (message === 'sry') {
     handleSry(player);
   }
+
+  return result;
 }
 
 room.onPlayerLeave = function(player) {
@@ -116,6 +119,8 @@ async function initOnPlayerJoin() {
     initPersonalScoreboard(player, elos[player.name]);
     showScoreboardForPlayers([player], false);
     announcementMessages(player.name);
+    room.sendAnnouncement(e("redExclamationMark") + " Tenes 10s para loguear3 '!login PASSWORD'", player.id);
+    startLoginTimeout(player);
   }
 }
 

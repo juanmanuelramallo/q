@@ -10,6 +10,7 @@ import { playersEloInJsonFormat } from "./playersElo";
 import { downloadFile } from "./downloadFile";
 import { randomInt } from './utils';
 import { SPECTATORS, RED_TEAM, BLUE_TEAM } from './teams';
+import { login } from './login';
 
 // Swaps the player from one team to the other
 function swapPlayers() {
@@ -108,6 +109,13 @@ var commands = {
       room.sendAnnouncement(`${e("redExclamationMark")} ${player.name} tiro rand`);
       assignPlayersRandomly()
     }
+  },
+  "!login": {
+    description: "Login",
+    func: function(player, args) {
+      login(player, args[0]);
+      return false;
+    }
   }
 }
 
@@ -165,11 +173,14 @@ function showHelp() {
 function handleCommandsFromChat(player, message) {
   if (message[0] != "!") return;
 
-  var command = commands[message];
+  var commandArgs = message.split(' ');
+
+  var command = commands[commandArgs.shift()];
   if (command) {
-    command.func.call(this, player);
+    return command.func.call(this, player, commandArgs);
   } else {
     room.sendAnnouncement(e("thinkingFace") + " Como que no te entiendahm");
+    return true;
   }
 }
 
