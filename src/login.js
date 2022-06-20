@@ -1,7 +1,7 @@
 import { room } from "./room";
 
 const timeoutRegistry = {};
-const maxTime = 10000;
+const maxTime = 15000;
 
 function startLoginTimeout(player) {
   var timeout = setTimeout(function() {
