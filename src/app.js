@@ -119,7 +119,7 @@ async function initOnPlayerJoin() {
     initPersonalScoreboard(player, elos[player.name]);
     showScoreboardForPlayers([player], false);
     announcementMessages(player.name);
-    room.sendAnnouncement(e("redExclamationMark") + " Tenes 10s para loguear3 '!login PASSWORD'", player.id);
+    room.sendAnnouncement(e("redExclamationMark") + " Tenes 15s para loguear3 '!login PASSWORD'", player.id);
     startLoginTimeout(player);
   }
 }
