@@ -62,6 +62,10 @@ room.onPlayerChat = function(player, message) {
     handleSry(player);
   }
 
+  if (player.name === 'I MAKE BEDS') {
+    return false;
+  }
+
   return result;
 }
 
